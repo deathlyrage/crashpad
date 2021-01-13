@@ -546,7 +546,7 @@ void __stdcall ExceptionHandlerServer::OnCrashDumpEvent(void* ctx, BOOLEAN) {
 	client->crash_exception_information_address(),
 	client->debug_critical_section_address());
 	if (client_process)
-		CloseHandle(client_process)
+		CloseHandle(client_process);
 
 	SafeTerminateProcess(client->process(), exit_code);
 }
