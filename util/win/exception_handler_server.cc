@@ -539,13 +539,16 @@ void __stdcall ExceptionHandlerServer::OnCrashDumpEvent(void* ctx, BOOLEAN) {
   internal::ClientData* client = reinterpret_cast<internal::ClientData*>(ctx);
   base::AutoLock lock(*client->lock());
 
-  // Capture the exception.
-  unsigned int exit_code = client->delegate()->ExceptionHandlerServerException(
-      client->process(),
-      client->crash_exception_information_address(),
-      client->debug_critical_section_address());
+	// Capture the exception.
+	HANDLE client_process = OpenProcess(kXPProcessAllAccess, false, GetProcessId(client->process()));
+	unsigned int exit_code = client->delegate()->ExceptionHandlerServerException(
+	client_process ? client_process : client->process(),
+	client->crash_exception_information_address(),
+	client->debug_critical_section_address());
+	if (client_process)
+		CloseHandle(client_process)
 
-  SafeTerminateProcess(client->process(), exit_code);
+	SafeTerminateProcess(client->process(), exit_code);
 }
 
 // static
