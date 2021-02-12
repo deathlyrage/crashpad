@@ -31,7 +31,6 @@ else()
         zlib/inflate.h
         zlib/inftrees.c
         zlib/inftrees.h
-        zlib/names.h
         zlib/trees.c
         zlib/trees.h
         zlib/uncompr.c
@@ -45,8 +44,6 @@ else()
         target_sources(crashpad_zlib PRIVATE
             zlib/crc_folding.c
             zlib/fill_window_sse.c
-            zlib/x86.c
-            zlib/x86.h
         )
 
         if(NOT MSVC)
