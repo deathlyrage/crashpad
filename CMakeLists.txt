@@ -92,7 +92,6 @@ if(MSVC)
         $<$<COMPILE_LANGUAGE:C,CXX>:/FS>
         $<$<COMPILE_LANGUAGE:C,CXX>:/W4>
         $<$<COMPILE_LANGUAGE:C,CXX>:/WX>
-        $<$<COMPILE_LANGUAGE:C,CXX>:/Zi>
         $<$<COMPILE_LANGUAGE:C,CXX>:/bigobj> # Support larger number of sections in obj file.
         $<$<COMPILE_LANGUAGE:C,CXX>:/wd4100> # Unreferenced formal parameter.
         $<$<COMPILE_LANGUAGE:C,CXX>:/wd4127> # Conditional expression is constant.
@@ -120,6 +119,12 @@ add_subdirectory(third_party/getopt)
 
 add_subdirectory(tools)
 add_subdirectory(handler)
+
+if(CRASHPAD_ENABLE_STACKTRACE AND APPLE AND NOT IOS)
+    set(LIBUNWIND_ENABLE_SHARED OFF)
+    add_subdirectory(libunwind)
+    crashpad_install_target(unwind_static)
+endif()
 
 if(CRASHPAD_ENABLE_INSTALL_DEV)
     install(EXPORT crashpad_export NAMESPACE crashpad:: FILE crashpad-targets.cmake

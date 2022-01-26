@@ -46,7 +46,6 @@ add_library(crashpad_snapshot STATIC
     unloaded_module_snapshot.h
 )
 
-
 if(APPLE AND NOT IOS)
     target_sources(crashpad_snapshot PRIVATE
         posix/timezone.cc
@@ -112,6 +111,8 @@ if(LINUX OR ANDROID)
     target_sources(crashpad_snapshot PRIVATE
         posix/timezone.cc
         posix/timezone.h
+        linux/capture_memory_delegate_linux.cc
+        linux/capture_memory_delegate_linux.h
         linux/cpu_context_linux.cc
         linux/cpu_context_linux.h
         linux/debug_rendezvous.cc
@@ -222,6 +223,17 @@ if(WIN32)
             "-Wno-unknown-attributes"
         )
     endif()
+endif()
+
+if(APPLE AND NOT IOS AND CRASHPAD_ENABLE_STACKTRACE)
+    target_include_directories(crashpad_snapshot PRIVATE ../libunwind/include)
+    target_link_libraries(crashpad_snapshot PRIVATE unwind_static)
+endif()
+
+if(LINUX AND CRASHPAD_ENABLE_STACKTRACE)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(UNWIND REQUIRED IMPORTED_TARGET libunwind-ptrace)
+    target_link_libraries(crashpad_snapshot PRIVATE PkgConfig::UNWIND)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
