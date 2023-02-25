@@ -1,4 +1,4 @@
-// Copyright 2019 The Crashpad Authors
+// Copyright 2015 The Crashpad Authors. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CRASHPAD_THIRD_PARTY_LSS_LSS_H_
-#define CRASHPAD_THIRD_PARTY_LSS_LSS_H_
+#ifndef CRASHPAD_COMPAT_MINGW_WERAPI_H_
+#define CRASHPAD_COMPAT_MINGW_WERAPI_H_
 
-#if defined(CRASHPAD_LSS_SOURCE_EXTERNAL)
-#include "third_party/lss/linux_syscall_support.h"
-#elif defined(CRASHPAD_LSS_SOURCE_EMBEDDED)
-#include "third_party/lss/lss/linux_syscall_support.h"
-#elif defined(CRASHPAD_LSS_SOURCE_FUCHSIA)
-#include "../../../../../third_party/linux-syscall-support/src/linux_syscall_support.h"
-#else
-#error Unknown lss source
+typedef HANDLE HREPORT;
+
+#ifndef WER_MAX_PREFERRED_MODULES_BUFFER
+#define WER_MAX_PREFERRED_MODULES_BUFFER 256
 #endif
 
-#endif  // CRASHPAD_THIRD_PARTY_LSS_LSS_H_
+#define PWER_SUBMIT_RESULT WER_SUBMIT_RESULT*
+
+#include_next <werapi.h>
+
+#endif  // CRASHPAD_COMPAT_MINGW_WERAPI_H_
