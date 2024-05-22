@@ -114,6 +114,18 @@ if(APPLE)
     endif()
 endif()
 
+# Check the target platform and set platform-specific flags and definitions
+if(CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.XboxOne.x64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.Scarlett.x64")
+    add_definitions(-DWIN32_LEAN_AND_MEAN -D_ATL_NO_DEFAULT_LIBS -D__WRL_NO_DEFAULT_LIB__ -DWINAPI_FAMILY=WINAPI_FAMILY_GAMES )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /favor:AMD64 /EHsc /fp:fast")
+	
+    if(CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.XboxOne.x64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
+    elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.Scarlett.x64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
+    endif()
+endif()
+
 if(WIN32)
     mc_append_sources(
         memory/page_size_win.cc
