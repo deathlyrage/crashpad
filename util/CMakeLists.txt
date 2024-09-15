@@ -249,7 +249,7 @@ endif()
 
 if(LINUX OR ANDROID)
     if (LINUX)
-        if(NOT CURL_FOUND) # Some other lib might bring libcurl already
+        if(NOT TARGET CURL::libcurl) # Some other lib might bring libcurl already
             find_package(CURL REQUIRED)
         endif()
 
@@ -375,9 +375,15 @@ if(WIN32)
         win/xp_compat.h
     )
     if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "arm|ARM64")
-        target_sources(crashpad_util PRIVATE
-            misc/capture_context_win_arm64.asm
-        )
+        if (MINGW)
+            target_sources(crashpad_util PRIVATE
+                misc/capture_context_win_arm64.S
+            )
+        else()
+            target_sources(crashpad_util PRIVATE
+                misc/capture_context_win_arm64.asm
+            )
+        endif()
     else()
         target_sources(crashpad_util PRIVATE
             misc/capture_context_win.asm
@@ -501,6 +507,8 @@ if(APPLE)
             "-framework UIKit"
         )
     endif()
+
+    target_compile_options(crashpad_util PRIVATE "-Wno-deprecated-declarations")
 endif()
 
 if(LINUX)

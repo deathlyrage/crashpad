@@ -240,7 +240,7 @@ FileOffset LoggingSeekFile(FileHandle file, FileOffset offset, int whence) {
       method = FILE_END;
       break;
     default:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       break;
   }
 
@@ -293,7 +293,7 @@ FileHandle StdioFileHandle(StdioStream stdio_stream) {
       standard_handle = STD_ERROR_HANDLE;
       break;
     default:
-      NOTREACHED();
+      NOTREACHED_IN_MIGRATION();
       return INVALID_HANDLE_VALUE;
   }
 
