@@ -18,6 +18,18 @@ option(CRASHPAD_ENABLE_INSTALL "Enable crashpad installation" "${CRASHPAD_MAIN_P
 option(CRASHPAD_ENABLE_INSTALL_DEV "Enable crashpad development installation" "${CRASHPAD_MAIN_PROJECT}")
 option(CRASHPAD_ENABLE_STACKTRACE "Enable client-side stack trace recording" OFF)
 
+# Check the target platform and set platform-specific flags and definitions
+if(CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.XboxOne.x64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.Scarlett.x64")
+    add_definitions(-DWIN32_LEAN_AND_MEAN -D_ATL_NO_DEFAULT_LIBS -D__WRL_NO_DEFAULT_LIB__ -DWINAPI_FAMILY=WINAPI_FAMILY_GAMES )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /favor:AMD64 /EHsc /fp:fast")
+	
+    if(CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.XboxOne.x64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
+    elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "Gaming.Xbox.Scarlett.x64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
+    endif()
+endif()
+
 if(MSVC)
     set(CRASHPAD_ZLIB_SYSTEM_DEFAULT OFF)
 else()

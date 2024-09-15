@@ -39,11 +39,19 @@ namespace crashpad {
 
 namespace {
 
+#if !defined(_GAMING_XBOX)
 decltype(GetNamedPipeClientProcessId)* GetNamedPipeClientProcessIdFunction() {
   static const auto get_named_pipe_client_process_id =
       GET_FUNCTION(L"kernel32.dll", ::GetNamedPipeClientProcessId);
   return get_named_pipe_client_process_id;
 }
+#else
+// Provide a stub or alternative implementation for Xbox platforms
+decltype(GetNamedPipeClientProcessId)* GetNamedPipeClientProcessIdFunction() {
+  // Returning nullptr as this functionality is not available on Xbox platforms
+  return nullptr;
+}
+#endif
 
 HANDLE DuplicateEvent(HANDLE process, HANDLE event) {
   HANDLE handle;

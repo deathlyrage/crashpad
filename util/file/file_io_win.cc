@@ -23,15 +23,25 @@
 #include "base/notreached.h"
 #include "base/strings/utf_string_conversions.h"
 
+#if defined(_GAMING_XBOX_XBOXONE) || defined(_GAMING_XBOX_SCARLETT)
+	#pragma comment(lib, "xgameplatform.lib")
+	#pragma comment(lib, "xmem.lib")
+	#include <psapi.h>
+	#include <xmem.h>
+#endif
+
 namespace {
 
 bool IsSocketHandle(HANDLE file) {
+	
+#if !defined(_GAMING_XBOX)
   if (GetFileType(file) == FILE_TYPE_PIPE) {
     // FILE_TYPE_PIPE means that it's a socket, a named pipe, or an anonymous
     // pipe. If we are unable to retrieve the pipe information, we know it's a
     // socket.
     return !GetNamedPipeInfo(file, nullptr, nullptr, nullptr, nullptr);
   }
+#endif
   return false;
 }
 

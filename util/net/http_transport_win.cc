@@ -75,12 +75,15 @@ std::string UserAgent() {
 #error Port
 #endif
 
+#if !defined(_GAMING_XBOX)
     BOOL is_wow64;
     if (!IsWow64Process(GetCurrentProcess(), &is_wow64)) {
       PLOG(WARNING) << "IsWow64Process";
     } else if (is_wow64) {
       user_agent.append("; WoW64");
     }
+#endif
+	
     user_agent.append(1, ')');
   }
 
