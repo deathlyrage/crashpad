@@ -374,8 +374,8 @@ if(WIN32)
         win/traits.h
         win/xp_compat.h
     )
-    if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "arm|ARM64")
-        if (MINGW)
+    if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "arm|ARM64")
+       if (MINGW)
             target_sources(crashpad_util PRIVATE
                 misc/capture_context_win_arm64.S
             )
@@ -383,11 +383,22 @@ if(WIN32)
             target_sources(crashpad_util PRIVATE
                 misc/capture_context_win_arm64.asm
             )
+         set_source_files_properties(
+             misc/capture_context_win_arm64.asm
+             PROPERTIES
+             LANGUAGE ASM_MARMASM
+         )
         endif()
     else()
         target_sources(crashpad_util PRIVATE
             misc/capture_context_win.asm
             win/safe_terminate_process.asm
+        )
+        set_source_files_properties(
+            misc/capture_context_win.asm
+            win/safe_terminate_process.asm
+            PROPERTIES
+            LANGUAGE ASM_MASM
         )
     endif()
 endif()
